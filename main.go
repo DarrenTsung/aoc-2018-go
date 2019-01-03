@@ -3,6 +3,7 @@ package main
 import (
 	"aoc/part"
 	"aoc/puzzles/day1"
+	"aoc/puzzles/day2"
 	"fmt"
 	"io/ioutil"
 )
@@ -10,6 +11,9 @@ import (
 func main() {
 	solveAny("Day1", part.One, day1.SolvePartOne)
 	solveAny("Day1", part.Two, day1.SolvePartTwo)
+
+	solveAny("Day2", part.One, day2.SolvePartOne)
+	// solveAny("Day2", part.Two, day2.SolvePartTwo)
 }
 
 func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
@@ -25,6 +29,8 @@ func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
 	switch solutionFunc := solutionFunc.(type) {
 	case func(string) (int, error):
 		res, err = solutionFunc(input)
+	case func(string) int:
+		res = solutionFunc(input)
 	default:
 		fmt.Println(dayName, part, "- invalid solutionFunc passed:", solutionFunc)
 		return
