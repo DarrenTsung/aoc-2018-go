@@ -1,19 +1,20 @@
 package main
 
 import (
+	"aoc/part"
 	"aoc/puzzles/day1"
 	"fmt"
 	"io/ioutil"
 )
 
 func main() {
-	solveAny("day1", day1.Solve)
+	solveAny("Day1", part.One, day1.SolvePartOne)
 }
 
-func solveAny(dayName string, solutionFunc interface{}) {
+func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
 	inputBytes, err := ioutil.ReadFile(fmt.Sprintf("input/%s.txt", dayName))
 	if err != nil {
-		fmt.Println(dayName, "- error reading input file:", err)
+		fmt.Println(dayName, part, "- error reading input file:", err)
 		return
 	}
 
@@ -24,13 +25,13 @@ func solveAny(dayName string, solutionFunc interface{}) {
 	case func(string) (int, error):
 		res, err = solutionFunc(input)
 	default:
-		fmt.Println(dayName, "- invalid solutionFunc passed:", solutionFunc)
+		fmt.Println(dayName, part, "- invalid solutionFunc passed:", solutionFunc)
 		return
 	}
 
 	if err != nil {
-		fmt.Println(dayName, "- err:", err)
+		fmt.Println(dayName, part, "- err:", err)
 	} else {
-		fmt.Println(dayName, "- solution:", res)
+		fmt.Println(dayName, part, "- solution:", res)
 	}
 }

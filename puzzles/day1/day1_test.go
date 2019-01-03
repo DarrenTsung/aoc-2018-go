@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestSolve(t *testing.T) {
+func TestSolvePartOne(t *testing.T) {
 	type args struct {
 		input string
 	}
@@ -59,7 +59,7 @@ func TestSolve(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := Solve(tt.args.input)
+			got, err := SolvePartOne(tt.args.input)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Solve() error = %v, wantErr %v", err, tt.wantErr)
 				return
