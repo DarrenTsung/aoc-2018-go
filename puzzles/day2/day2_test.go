@@ -75,3 +75,32 @@ func Test_checkDoublesAndTriples(t *testing.T) {
 		})
 	}
 }
+
+func TestSolvePartTwo(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "simple example",
+			args: args{"abc\nabd"},
+			want: "ab",
+		},
+		{
+			name: "more complicated",
+			args: args{"abc\nabc\naii\nmii"},
+			want: "ii",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := SolvePartTwo(tt.args.input); got != tt.want {
+				t.Errorf("SolvePartTwo() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
