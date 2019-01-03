@@ -4,6 +4,7 @@ import (
 	"aoc/part"
 	"aoc/puzzles/day1"
 	"aoc/puzzles/day2"
+	"aoc/puzzles/day3"
 	"fmt"
 	"io/ioutil"
 )
@@ -14,6 +15,9 @@ func main() {
 
 	solveAny("Day2", part.One, day2.SolvePartOne)
 	solveAny("Day2", part.Two, day2.SolvePartTwo)
+
+	solveAny("Day3", part.One, day3.SolvePartOne)
+	// solveAny("Day3", part.Two, day3.SolvePartTwo)
 }
 
 func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
