@@ -11,7 +11,7 @@ func SolvePartOne(input string) int {
 	doubleCount := 0
 	tripleCount := 0
 
-	for _, line := range strings.FieldsFunc(input, func(r rune) bool { return unicode.IsSpace(r) }) {
+	for _, line := range strings.FieldsFunc(input, unicode.IsSpace) {
 		hasDouble, hasTriple := checkDoublesAndTriples(line)
 		if hasDouble {
 			doubleCount++
