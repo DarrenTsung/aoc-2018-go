@@ -95,6 +95,12 @@ func TestSolvePartTwo(t *testing.T) {
 			args: args{"abc\nabc\naii\nmii"},
 			want: "ii",
 		},
+		{
+			name: "no solution",
+			// no words that are different by 1 character
+			args: args{"abc\nabc"},
+			want: "",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
