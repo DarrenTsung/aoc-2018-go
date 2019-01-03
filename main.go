@@ -9,6 +9,7 @@ import (
 
 func main() {
 	solveAny("Day1", part.One, day1.SolvePartOne)
+	solveAny("Day1", part.Two, day1.SolvePartTwo)
 }
 
 func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
