@@ -16,7 +16,7 @@ func SolvePartOne(input string) (int, error) {
 
 	occupiedCount := map[rect.Point]int{}
 	for _, claim := range claims {
-		claim.IterPoints(func(point rect.Point) {
+		claim.rect.IterPoints(func(point rect.Point) {
 			occupiedCount[point]++
 		})
 	}
@@ -31,33 +31,73 @@ func SolvePartOne(input string) (int, error) {
 	return overlapCount, nil
 }
 
-var claimRegex = regexp.MustCompile(`(\d+),(\d+): (\d+)x(\d+)`)
+// SolvePartTwo solves Day3 Part2
+func SolvePartTwo(input string) (int, error) {
+	claims, err := parseClaims(input)
+	if err != nil {
+		return 0, err
+	}
 
-func parseClaims(input string) (claims []rect.Rect, err error) {
+	occupiedCount := map[rect.Point]int{}
+	for _, claim := range claims {
+		claim.rect.IterPoints(func(point rect.Point) {
+			occupiedCount[point]++
+		})
+	}
+
+	for _, claim := range claims {
+		overlaps := false
+		claim.rect.IterPoints(func(point rect.Point) {
+			if occupiedCount[point] > 1 {
+				overlaps = true
+			}
+		})
+
+		if !overlaps {
+			return claim.id, nil
+		}
+	}
+
+	return -1, nil
+}
+
+type claim struct {
+	rect rect.Rect
+	id   int
+}
+
+var claimRegex = regexp.MustCompile(`#(\d+) @ (\d+),(\d+): (\d+)x(\d+)`)
+
+func parseClaims(input string) (claims []claim, err error) {
 	for _, line := range strings.Split(input, "\n") {
 		values := claimRegex.FindStringSubmatch(line)
 		if values != nil {
-			x, err := strconv.Atoi(values[1])
+			id, err := strconv.Atoi(values[1])
 			if err != nil {
 				return nil, err
 			}
 
-			y, err := strconv.Atoi(values[2])
+			x, err := strconv.Atoi(values[2])
 			if err != nil {
 				return nil, err
 			}
 
-			width, err := strconv.Atoi(values[3])
+			y, err := strconv.Atoi(values[3])
 			if err != nil {
 				return nil, err
 			}
 
-			height, err := strconv.Atoi(values[4])
+			width, err := strconv.Atoi(values[4])
 			if err != nil {
 				return nil, err
 			}
 
-			claims = append(claims, rect.Rect{X: x, Y: y, Width: width, Height: height})
+			height, err := strconv.Atoi(values[5])
+			if err != nil {
+				return nil, err
+			}
+
+			claims = append(claims, claim{rect.Rect{X: x, Y: y, Width: width, Height: height}, id})
 		}
 	}
 

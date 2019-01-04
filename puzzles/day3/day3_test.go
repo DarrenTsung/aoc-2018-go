@@ -13,22 +13,22 @@ func Test_parseClaims(t *testing.T) {
 	tests := []struct {
 		name       string
 		args       args
-		wantClaims []rect.Rect
+		wantClaims []claim
 		wantErr    bool
 	}{
 		{
 			name:       "single",
 			args:       args{"#1 @ 1,3: 4x4"},
-			wantClaims: []rect.Rect{rect.Rect{X: 1, Y: 3, Width: 4, Height: 4}},
+			wantClaims: []claim{claim{rect.Rect{X: 1, Y: 3, Width: 4, Height: 4}, 1}},
 			wantErr:    false,
 		},
 		{
 			name: "multiple",
 			args: args{"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2"},
-			wantClaims: []rect.Rect{
-				rect.Rect{X: 1, Y: 3, Width: 4, Height: 4},
-				rect.Rect{X: 3, Y: 1, Width: 4, Height: 4},
-				rect.Rect{X: 5, Y: 5, Width: 2, Height: 2},
+			wantClaims: []claim{
+				claim{rect.Rect{X: 1, Y: 3, Width: 4, Height: 4}, 1},
+				claim{rect.Rect{X: 3, Y: 1, Width: 4, Height: 4}, 2},
+				claim{rect.Rect{X: 5, Y: 5, Width: 2, Height: 2}, 3},
 			},
 			wantErr: false,
 		},
@@ -114,6 +114,50 @@ func TestSolvePartOne(t *testing.T) {
 			}
 			if got != tt.want {
 				t.Errorf("SolvePartOne() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSolvePartTwo(t *testing.T) {
+	type args struct {
+		input string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    int
+		wantErr bool
+	}{
+		{
+			name: "given",
+			args: args{"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2"},
+			// claim #3 does not overlap with any others
+			want:    3,
+			wantErr: false,
+		},
+		{
+			name:    "all overlap",
+			args:    args{"#1 @ 1,3: 4x4\n#2 @ 3,1: 4x4\n#3 @ 3,1: 2x2"},
+			want:    -1,
+			wantErr: false,
+		},
+		{
+			name:    "parse error",
+			args:    args{"#1 @ 1,3: 99999999999999999994x4\n#2 @ 3,1: 4x4\n#3 @ 5,5: 2x2"},
+			want:    0,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := SolvePartTwo(tt.args.input)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("SolvePartTwo() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("SolvePartTwo() = %v, want %v", got, tt.want)
 			}
 		})
 	}
