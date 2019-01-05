@@ -7,34 +7,12 @@ import (
 
 // SolvePartOne solves day4 part1.
 func SolvePartOne(input string) (int, error) {
-	shifts, err := shift.ParseGuardShifts(input)
+	guardInfos, err := getGuardInfos(input)
 	if err != nil {
 		return 0, err
 	}
 
-	type GuardInfo struct {
-		totalAsleep   int
-		asleepMinutes [60]int
-	}
-
-	guardInfos := map[int]*GuardInfo{}
-
-	for _, shift := range shifts {
-		if guardInfos[shift.GuardID] == nil {
-			guardInfos[shift.GuardID] = &GuardInfo{}
-		}
-
-		for _, asleepSpan := range shift.Asleep {
-			guardInfos[shift.GuardID].totalAsleep += asleepSpan.End - 1 - asleepSpan.Start
-			for minute := asleepSpan.Start; minute < asleepSpan.End; minute++ {
-				asleepMinutes := guardInfos[shift.GuardID].asleepMinutes
-				asleepMinutes[minute]++
-				guardInfos[shift.GuardID].asleepMinutes = asleepMinutes
-			}
-		}
-	}
-
-	var sleepiestGuardInfo *GuardInfo
+	var sleepiestGuardInfo *guardInfo
 	var sleepiestGuardID int
 	for guardID, info := range guardInfos {
 		if sleepiestGuardInfo == nil || sleepiestGuardInfo.totalAsleep < info.totalAsleep {
@@ -48,6 +26,62 @@ func SolvePartOne(input string) (int, error) {
 	})
 
 	return sleepiestGuardID * sleepiestMinute, nil
+}
+
+// SolvePartTwo solves day4 part2.
+func SolvePartTwo(input string) (int, error) {
+	guardInfos, err := getGuardInfos(input)
+	if err != nil {
+		return 0, err
+	}
+
+	var sleepiestMinute *int
+	var sleepiestMinuteAmount int
+	var sleepiestGuardID int
+	for guardID, info := range guardInfos {
+		for minute := 0; minute < 60; minute++ {
+			if sleepiestMinute == nil || sleepiestMinuteAmount < info.asleepMinutes[minute] {
+				// Because we're using pointers we have to copy a new int to a different address
+				var storedMinute = minute
+				sleepiestMinute = &storedMinute
+				sleepiestMinuteAmount = info.asleepMinutes[minute]
+				sleepiestGuardID = guardID
+			}
+		}
+	}
+
+	return sleepiestGuardID * *sleepiestMinute, nil
+}
+
+type guardInfo struct {
+	totalAsleep   int
+	asleepMinutes [60]int
+}
+
+func getGuardInfos(input string) (map[int]*guardInfo, error) {
+	shifts, err := shift.ParseGuardShifts(input)
+	if err != nil {
+		return nil, err
+	}
+
+	guardInfos := map[int]*guardInfo{}
+
+	for _, shift := range shifts {
+		if guardInfos[shift.GuardID] == nil {
+			guardInfos[shift.GuardID] = &guardInfo{}
+		}
+
+		for _, asleepSpan := range shift.Asleep {
+			guardInfos[shift.GuardID].totalAsleep += asleepSpan.End - 1 - asleepSpan.Start
+			for minute := asleepSpan.Start; minute < asleepSpan.End; minute++ {
+				asleepMinutes := guardInfos[shift.GuardID].asleepMinutes
+				asleepMinutes[minute]++
+				guardInfos[shift.GuardID].asleepMinutes = asleepMinutes
+			}
+		}
+	}
+
+	return guardInfos, nil
 }
 
 func max(slice interface{}, less func(i, j int) bool) int {
