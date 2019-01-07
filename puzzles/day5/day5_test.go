@@ -49,6 +49,10 @@ func TestSolvePartOne(t *testing.T) {
 			input: "XXABCDEedEFGgfecbaBbBXX\n",
 			want:  5,
 		},
+		{
+			input: "\n",
+			want:  0,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
