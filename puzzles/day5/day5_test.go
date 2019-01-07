@@ -1,6 +1,8 @@
 package day5
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSolvePartOne(t *testing.T) {
 	tests := []struct {
@@ -52,6 +54,29 @@ func TestSolvePartOne(t *testing.T) {
 		t.Run(tt.input, func(t *testing.T) {
 			if got := SolvePartOne(tt.input); got != tt.want {
 				t.Errorf("SolvePartOne() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSolvePartTwo(t *testing.T) {
+	tests := []struct {
+		input string
+		want  int
+	}{
+		{
+			input: "dabAcCaCBAcCcaDA",
+			want:  4,
+		},
+		{
+			input: "dabAcCaCBAcCcaDA\n",
+			want:  4,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.input, func(t *testing.T) {
+			if got := SolvePartTwo(tt.input); got != tt.want {
+				t.Errorf("SolvePartTwo() = %v, want %v", got, tt.want)
 			}
 		})
 	}

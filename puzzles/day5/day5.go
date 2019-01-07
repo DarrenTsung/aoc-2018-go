@@ -1,6 +1,7 @@
 package day5
 
 import (
+	"math"
 	"strings"
 	"unicode"
 )
@@ -10,9 +11,10 @@ func SolvePartOne(input string) int {
 	runes := []rune(strings.TrimSpace(input))
 	madeChange := true
 
+	var prevLowerR rune
 	for madeChange {
 		madeChange = false
-		newRunes := []rune{}
+		newRunes := make([]rune, 0, len(runes))
 
 		len := len(runes)
 		for i := 0; i < len; i++ {
@@ -26,14 +28,18 @@ func SolvePartOne(input string) int {
 
 			nextR := runes[i+1]
 
-			isLower := unicode.IsLower(r)
-			nextIsLower := unicode.IsLower(nextR)
-
 			// the two characters react and destroy each other
-			if isLower != nextIsLower && unicode.ToLower(r) == unicode.ToLower(nextR) {
-				madeChange = true
-				i++
-				continue
+			if r != nextR {
+				nextLowerR := unicode.ToLower(nextR)
+				wereEqual := prevLowerR == nextLowerR
+
+				prevLowerR = nextLowerR
+
+				if wereEqual {
+					madeChange = true
+					i++
+					continue
+				}
 			}
 
 			newRunes = append(newRunes, r)
@@ -43,4 +49,27 @@ func SolvePartOne(input string) int {
 	}
 
 	return len(runes)
+}
+
+// SolvePartTwo solves day5 part2
+func SolvePartTwo(input string) int {
+	input = strings.TrimSpace(input)
+
+	chars := map[rune]bool{}
+	for _, r := range input {
+		chars[unicode.ToLower(r)] = true
+	}
+
+	min := math.MaxInt32
+	for r := range chars {
+		removedInput := strings.Replace(input, string(r), "", -1)
+		removedInput = strings.Replace(removedInput, string(unicode.ToUpper(r)), "", -1)
+
+		s := SolvePartOne(removedInput)
+		if min > s {
+			min = s
+		}
+	}
+
+	return min
 }

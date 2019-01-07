@@ -25,7 +25,7 @@ func main() {
 	solveAny("Day4", part.Two, day4.SolvePartTwo)
 
 	solveAny("Day5", part.One, day5.SolvePartOne)
-	// solveAny("Day5", part.Two, day5.SolvePartTwo)
+	solveAny("Day5", part.Two, day5.SolvePartTwo)
 }
 
 func solveAny(dayName string, part part.Part, solutionFunc interface{}) {
