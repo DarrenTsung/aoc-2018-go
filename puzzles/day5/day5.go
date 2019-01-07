@@ -11,12 +11,20 @@ func SolvePartOne(input string) int {
 	runes := []rune(strings.TrimSpace(input))
 	madeChange := true
 
-	var prevLowerR rune
+	if len(runes) <= 0 {
+		return 0
+	}
+
 	for madeChange {
 		madeChange = false
-		newRunes := make([]rune, 0, len(runes))
-
 		len := len(runes)
+		if len <= 0 {
+			break
+		}
+
+		newRunes := make([]rune, 0, len)
+		var cachedLowerR *rune
+
 		for i := 0; i < len; i++ {
 			r := runes[i]
 
@@ -30,15 +38,19 @@ func SolvePartOne(input string) int {
 
 			// the two characters react and destroy each other
 			if r != nextR {
+				if cachedLowerR == nil {
+					lowerR := unicode.ToLower(r)
+					cachedLowerR = &lowerR
+				}
+
 				nextLowerR := unicode.ToLower(nextR)
-				wereEqual := prevLowerR == nextLowerR
-
-				prevLowerR = nextLowerR
-
-				if wereEqual {
+				if *cachedLowerR == nextLowerR {
+					cachedLowerR = nil
 					madeChange = true
 					i++
 					continue
+				} else {
+					cachedLowerR = &nextLowerR
 				}
 			}
 
