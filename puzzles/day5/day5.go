@@ -40,8 +40,14 @@ func SolvePartTwo(input string) int {
 
 	min := math.MaxInt32
 	for r := range chars {
-		removedInput := strings.Replace(input, string(r), "", -1)
-		removedInput = strings.Replace(removedInput, string(unicode.ToUpper(r)), "", -1)
+		upperR := unicode.ToUpper(r)
+
+		removedInput := strings.Map(func(eachR rune) rune {
+			if eachR == r || eachR == upperR {
+				return -1
+			}
+			return eachR
+		}, input)
 
 		s := SolvePartOne(removedInput)
 		if min > s {
