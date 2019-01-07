@@ -9,58 +9,24 @@ import (
 // SolvePartOne solves day5 part1
 func SolvePartOne(input string) int {
 	runes := []rune(strings.TrimSpace(input))
-	madeChange := true
-
 	if len(runes) <= 0 {
 		return 0
 	}
 
-	for madeChange {
-		madeChange = false
-		len := len(runes)
-		if len <= 0 {
-			break
-		}
-
-		newRunes := make([]rune, 0, len)
-		var cachedLowerR *rune
-
-		for i := 0; i < len; i++ {
-			r := runes[i]
-
-			// if end, automatically append
-			if len-1 == i {
-				newRunes = append(newRunes, r)
+	newRunes := []rune{runes[0]}
+	for _, r := range runes[1:] {
+		if len(newRunes) > 0 {
+			lastR := newRunes[len(newRunes)-1]
+			if lastR != r && unicode.ToLower(lastR) == unicode.ToLower(r) {
+				newRunes = newRunes[:len(newRunes)-1]
 				continue
 			}
-
-			nextR := runes[i+1]
-
-			// the two characters react and destroy each other
-			if r != nextR {
-				if cachedLowerR == nil {
-					lowerR := unicode.ToLower(r)
-					cachedLowerR = &lowerR
-				}
-
-				nextLowerR := unicode.ToLower(nextR)
-				if *cachedLowerR == nextLowerR {
-					cachedLowerR = nil
-					madeChange = true
-					i++
-					continue
-				} else {
-					cachedLowerR = &nextLowerR
-				}
-			}
-
-			newRunes = append(newRunes, r)
 		}
 
-		runes = newRunes
+		newRunes = append(newRunes, r)
 	}
 
-	return len(runes)
+	return len(newRunes)
 }
 
 // SolvePartTwo solves day5 part2

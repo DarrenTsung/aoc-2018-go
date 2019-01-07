@@ -18,6 +18,10 @@ func TestSolvePartOne(t *testing.T) {
 			want:  0,
 		},
 		{
+			input: "aAb",
+			want:  1,
+		},
+		{
 			input: "abBA",
 			want:  0,
 		},
